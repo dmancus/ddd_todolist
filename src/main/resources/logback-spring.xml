@@ -8,12 +8,24 @@
         </layout>
     </appender>
 
-    <root level="info">
-        <appender-ref ref="Console" />
-    </root>
+    <springProfile name="test | dev" >
+        <logger name="com.ddd.learn.todoList" level="debug" additivity="false">
+            <appender-ref ref="Console" />
+        </logger>
 
-    <!-- Log everything at the TRACE level -->
-    <logger name="com.ddd.learn.todoList" level="trace" additivity="false">
-        <appender-ref ref="Console" />
-    </logger>
+        <root level="info">
+            <appender-ref ref="Console" />
+        </root>
+    </springProfile>
+
+    <!-- TODO -->
+    <springProfile name="qa | prod" >
+        <logger name="com.ddd.learn.todoList" level="warning" additivity="false">
+            <appender-ref ref="Console" />
+        </logger>
+
+        <root level="warning">
+            <appender-ref ref="Console" />
+        </root>
+    </springProfile>
 </configuration>
