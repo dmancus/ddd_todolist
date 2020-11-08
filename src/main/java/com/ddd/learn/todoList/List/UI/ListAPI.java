@@ -1,9 +1,11 @@
 package com.ddd.learn.todoList.List.UI;
 
+import com.ddd.learn.todoList.List.UI.entities.CreateListResponse;
 import com.ddd.learn.todoList.List.UI.entities.GetListResponse;
 import com.ddd.learn.todoList.List.UI.entities.NewTodoItem;
 import com.ddd.learn.todoList.List.UI.entities.NewTodoList;
 import com.ddd.learn.todoList.List.application.ListManager;
+import com.ddd.learn.todoList.List.application.entities.ApplicationException;
 import com.ddd.learn.todoList.List.model.entities.Item;
 import com.ddd.learn.todoList.List.model.entities.TodoList;
 import org.slf4j.Logger;
@@ -34,9 +36,18 @@ public class ListAPI {
     }
 
     @PostMapping("/todo_list")
-    public TodoList createList(@RequestBody NewTodoList newList){
+    public CreateListResponse createList(@RequestBody NewTodoList newList){
         logger.debug("call to POST /todo_list");
-        return listManager.createList(newList);
+        CreateListResponse result = new CreateListResponse();
+        try{
+            result.setList(listManager.createList(newList));
+            result.setSuccess(true);
+        }
+        catch(ApplicationException e ){
+            result.setSuccess(false);
+            result.setErrors(e.getUserFacingError());
+        }
+        return result;
     }
 
     @PostMapping("/todo_list/{listId}/item")

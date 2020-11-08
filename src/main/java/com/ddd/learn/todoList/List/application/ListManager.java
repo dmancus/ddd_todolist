@@ -2,12 +2,14 @@ package com.ddd.learn.todoList.List.application;
 
 import com.ddd.learn.todoList.List.UI.entities.NewTodoItem;
 import com.ddd.learn.todoList.List.UI.entities.NewTodoList;
+import com.ddd.learn.todoList.List.application.entities.ApplicationException;
 import com.ddd.learn.todoList.List.infrastructure.ListRepository;
 import com.ddd.learn.todoList.List.model.entities.Item;
 import com.ddd.learn.todoList.List.model.entities.TodoList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -19,10 +21,17 @@ public class ListManager {
     @Autowired
     ListFactory listFactory;
 
-    public TodoList createList(NewTodoList newListInput){
+    public TodoList createList(NewTodoList newListInput) throws ApplicationException{
         TodoList newList = listFactory.createListFromUserInput(newListInput);
-        // may need to validate or enhance, but for now nothing to do
-        listRepository.createList(newList);
+        // Java best practice - throw early, catch late
+        // So infra level can throw error, then let it pass up to
+        // application layer before catching
+        try {
+            listRepository.createList(newList);
+        }
+        catch(IOException e){
+            throw new ApplicationException("Encountered problem when trying to create new list: " + newList.getName(), e, e.getMessage());
+        }
         return newList;
     }
 
