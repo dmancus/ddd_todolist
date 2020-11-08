@@ -2,6 +2,7 @@ package com.ddd.learn.todoList.List.application;
 
 import com.ddd.learn.todoList.List.UI.entities.NewTodoItem;
 import com.ddd.learn.todoList.List.UI.entities.NewTodoList;
+import com.ddd.learn.todoList.List.application.entities.ApplicationException;
 import com.ddd.learn.todoList.List.model.entities.Item;
 import com.ddd.learn.todoList.List.model.entities.TodoList;
 import com.ddd.learn.todoList.TodoListApplication;
@@ -16,6 +17,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
@@ -26,7 +28,7 @@ public class ListManagerTest {
     ListManager listManager;
 
     @Test
-    public void createListTest (){
+    public void createListTest () throws ApplicationException{
         // Prepare sample input
         NewTodoList testInput = new NewTodoList();
         testInput.setName("test list");
@@ -37,13 +39,15 @@ public class ListManagerTest {
         // check results
         assertTrue(StringUtils.isNotBlank(testList.getListId()));
         assertTrue(testList.getName().equals("test list"));
+
     }
 
     @Test
-    public void createItemTest (){
+    public void createItemTest() throws ApplicationException {
         // Prepare sample list
         NewTodoList setupInput = new NewTodoList();
         setupInput.setName("test list");
+
         TodoList testList = listManager.createList(setupInput);
 
         // New input item on our list
@@ -59,5 +63,6 @@ public class ListManagerTest {
         assertTrue(testList.getItems().size() == 1);
         assertTrue(testItem.getItemDesc().equals("test description"));
         assertTrue(testItem.getItemName().equals("test item"));
+
     }
 }
