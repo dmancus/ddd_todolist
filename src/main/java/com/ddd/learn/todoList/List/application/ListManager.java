@@ -42,7 +42,12 @@ public class ListManager {
         // which would break down.  For now, just treat them as two aggregates and move forward in
         // a simple way
         Item newItem = listFactory.createItemFromUserInput(newItemInput);
-        listRepository.addItemToList(listId, newItem);
+        try {
+            listRepository.addItemToList(listId, newItem);
+        }
+        catch( Exception e){
+            // TODO
+        }
         return newItem;
     }
 
